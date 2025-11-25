@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/AG-UI.slnx/FileContentIndex
+/AG-UI-Client/bin/Debug
+/AG-UI-Client/obj
+/AG-UI-Server/bin/Debug
+/AG-UI-Server/obj
+*.txt
+/AG-UI.slnLaunch.user
