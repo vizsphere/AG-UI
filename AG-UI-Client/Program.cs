@@ -45,10 +45,6 @@ try
 
         messages.Add(new ChatMessage(ChatRole.User, message));
 
-        // Stream the response
-        bool isFirstUpdate = true;
-        string? threadId = null;
-
         // Inside the streaming loop from getting-started.md
         await foreach (AgentRunResponseUpdate update in agent.RunStreamingAsync(messages, thread))
         {
