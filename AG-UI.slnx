@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+    <File Path="readMe.txt" />
+  </Folder>
+  <Project Path="AG-UI-Client/AG-UI-Client.csproj" Id="36a852c0-46ff-423c-bd2a-bf9583167a05" />
+  <Project Path="AG-UI-Server/AG-UI-Server.csproj" Id="0d3c0b4b-2c30-400c-b2c5-7eb09f74fb0a" />
+</Solution>
