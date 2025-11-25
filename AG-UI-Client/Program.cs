@@ -49,41 +49,62 @@ try
         bool isFirstUpdate = true;
         string? threadId = null;
 
+        // Inside the streaming loop from getting-started.md
         await foreach (AgentRunResponseUpdate update in agent.RunStreamingAsync(messages, thread))
         {
             ChatResponseUpdate chatUpdate = update.AsChatResponseUpdate();
 
-            // First update indicates run started
-            if (isFirstUpdate)
-            {
-                threadId = chatUpdate.ConversationId;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"\n[Run Started - Thread: {chatUpdate.ConversationId}, Run: {chatUpdate.ResponseId}]");
-                Console.ResetColor();
-                isFirstUpdate = false;
-            }
+            // ... existing run started code ...
 
-            // Display streaming text content
+            // Display streaming content
             foreach (AIContent content in update.Contents)
             {
-                if (content is TextContent textContent)
+                switch (content)
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Write(textContent.Text);
-                    Console.ResetColor();
-                }
-                else if (content is ErrorContent errorContent)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"\n[Error: {errorContent.Message}]");
-                    Console.ResetColor();
+                    case TextContent textContent:
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.Write(textContent.Text);
+                        Console.ResetColor();
+                        break;
+
+                    case FunctionCallContent functionCallContent:
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"\n[Function Call - Name: {functionCallContent.Name}]");
+
+                        // Display individual parameters
+                        if (functionCallContent.Arguments != null)
+                        {
+                            foreach (var kvp in functionCallContent.Arguments)
+                            {
+                                Console.WriteLine($"  Parameter: {kvp.Key} = {kvp.Value}");
+                            }
+                        }
+                        Console.ResetColor();
+                        break;
+
+                    case FunctionResultContent functionResultContent:
+                        Console.ForegroundColor = ConsoleColor.Magenta;
+                        Console.WriteLine($"\n[Function Result - CallId: {functionResultContent.CallId}]");
+
+                        if (functionResultContent.Exception != null)
+                        {
+                            Console.WriteLine($"  Exception: {functionResultContent.Exception}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"  Result: {functionResultContent.Result}");
+                        }
+                        Console.ResetColor();
+                        break;
+
+                    case ErrorContent errorContent:
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"\n[Error: {errorContent.Message}]");
+                        Console.ResetColor();
+                        break;
                 }
             }
         }
-
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"\n[Run Finished - Thread: {threadId}]");
-        Console.ResetColor();
     }
 }
 catch (Exception ex)
